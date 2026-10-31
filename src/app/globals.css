@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===================== palet: dark (default) ===================== */
+:root {
+  --c-bg: 8 9 11;
+  --c-card: 18 19 21;
+  --c-chip: 27 28 32;
+  --c-line: 45 47 61;
+  --c-ink: 245 245 247;
+  --c-dim: 156 163 175;
+  --c-gold: 229 169 60;
+  --c-income: 34 197 94;
+  --c-expense: 239 68 68;
+  --c-amberish: 245 158 11;
+  --c-onaccent: 8 9 11;
+  --bg-pattern: none;
+  --glow: none;
+  --card-shadow: none;
+}
+
+/* ===================== palet: vanila pastel (light) ===================== */
+[data-theme='vanilla'] {
+  --c-bg: 246 241 231; /* krem vanila */
+  --c-card: 255 253 248; /* putih susu */
+  --c-chip: 238 231 218; /* krem lebih tua untuk input/keypad */
+  --c-line: 226 216 199;
+  --c-ink: 58 51 43; /* coklat tua, bukan hitam pekat */
+  --c-dim: 114 103 88; /* lebih gelap supaya lolos kontras di krem */
+  --c-gold: 224 154 90; /* apricot pastel */
+  --c-income: 79 143 99; /* sage */
+  --c-expense: 192 82 79; /* dusty rose */
+  --c-amberish: 201 138 46;
+  --c-onaccent: 46 36 26;
+  /* wash pastel lembut di atas, tanpa pola garis */
+  --bg-pattern: radial-gradient(
+    circle at 18% -8%,
+    rgb(255 226 196 / 0.75),
+    transparent 55%
+  );
+  --glow: radial-gradient(circle at 88% 108%, rgb(214 231 255 / 0.7), transparent 52%);
+  --card-shadow: 0 1px 2px rgb(58 51 43 / 0.06), 0 8px 24px rgb(58 51 43 / 0.04);
+}
+
+html,
+body {
+  background-color: rgb(var(--c-bg));
+  color: rgb(var(--c-ink));
+}
+
+body {
+  /* pola/wash dulu (paling atas), glow di belakangnya */
+  background-image: var(--bg-pattern), var(--glow);
+  background-attachment: fixed;
+}
+
+@layer components {
+  /* kartu permukaan — beda render per tema */
+  .surface {
+    background-color: rgb(var(--c-card));
+    border: 1px solid rgb(var(--c-line));
+    border-radius: 0.75rem;
+    box-shadow: var(--card-shadow);
+  }
+
+  .num {
+    font-variant-numeric: tabular-nums;
+    font-family: ui-monospace, SFMono-Regular, monospace;
+  }
+}

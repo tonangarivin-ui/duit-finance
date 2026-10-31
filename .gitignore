@@ -1,0 +1,9 @@
+node_modules
+.next
+data/*.db*
+.env*
+tsconfig.tsbuildinfo
+
+# contoh env (tanpa nilai rahasia) tetap ikut ter-commit
+!.env.example
+!backend/.env.example

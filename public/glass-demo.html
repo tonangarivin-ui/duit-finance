@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Capacity Vaults — glass demo</title>
+<style>
+  :root {
+    --base: #609b97;
+    --ink: #f7faf9;
+    --ink-soft: rgba(247, 250, 249, .76);
+    --ink-dim: rgba(247, 250, 249, .55);
+    --glass: rgba(255, 255, 255, .07);
+    --glass-strong: rgba(255, 255, 255, .1);
+    --edge: rgba(255, 255, 255, .18);
+    --edge-strong: rgba(255, 255, 255, .28);
+    --radius: 18px;
+    --maxw: 1120px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    margin: 0;
+    color: var(--ink);
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+
+    /* ---- BACKGROUND: flat + 2 diagonal hairlines ---- */
+    background-color: var(--base);
+    background-image:
+      repeating-linear-gradient(42deg,
+        rgba(255, 255, 255, .09) 0 1px,
+        transparent 1px 170px);
+    background-attachment: fixed;
+  }
+
+  /* opsional: glow super lembut di belakang judul (matikan kalau mau flat total) */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 26% -10%, rgba(255, 255, 255, .1), transparent 58%);
+  }
+
+  .wrap {
+    position: relative;
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: clamp(28px, 5vw, 64px) clamp(18px, 4vw, 48px) clamp(28px, 4vw, 48px);
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(24px, 4vw, 44px);
+  }
+
+  /* ---------- glass primitive ---------- */
+  .glass {
+    background: var(--glass);
+    border: 1px solid var(--edge);
+    border-radius: var(--radius);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow:
+      inset 0 1px 0 var(--edge-strong),
+      0 1px 2px rgba(0, 0, 0, .06);
+  }
+
+  /* ---------- status pill ---------- */
+  .pill {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px 7px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .pill .dot {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.16);
+    border: 1px solid var(--edge);
+    display: grid; place-items: center;
+  }
+  .pill .dot svg { width: 10px; height: 10px; }
+
+  /* ---------- hero ---------- */
+  h1 {
+    margin: 0;
+    font-size: clamp(34px, 6.2vw, 62px);
+    line-height: 1.02;
+    letter-spacing: -.028em;
+    font-weight: 700;
+  }
+  .sub {
+    margin: 14px 0 0;
+    max-width: 46ch;
+    font-size: clamp(14px, 1.6vw, 17px);
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- vault grid ---------- */
+  .vaults {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+  }
+  .vault {
+    padding: 20px 16px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    transition: transform .18s ease, background .18s ease, border-color .18s ease;
+  }
+  .vault:hover {
+    transform: translateY(-2px);
+    background: var(--glass-strong);
+    border-color: var(--edge-strong);
+  }
+  .token {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-weight: 700;
+    font-size: 17px;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,.22);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.35);
+  }
+  .vault .name { font-size: 14px; font-weight: 650; letter-spacing: -.01em; }
+  .vault .meta { font-size: 11px; color: var(--ink-dim); margin-top: -8px; }
+
+  /* ---------- rewards bar ---------- */
+  .reward {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    flex-wrap: wrap;
+  }
+  .reward .icon {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    background: rgba(255,255,255,.1);
+    border: 1px solid var(--edge);
+    font-size: 13px; font-weight: 700;
+    flex: none;
+  }
+  .reward .text { font-size: clamp(14px, 1.6vw, 16px); font-weight: 650; }
+  .capsule {
+    margin-left: auto;
+    padding: 9px 16px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.1);
+    border: 1px solid var(--edge);
+    font-size: 12px;
+    letter-spacing: .01em;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+    text-decoration: none;
+  }
+  .capsule:hover { background: rgba(255,255,255,.16); color: var(--ink); }
+
+  /* ---------- brand ---------- */
+  .brand {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    color: var(--ink-soft);
+    font-size: 11px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+  .brand .mark {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.14);
+    border: 1px solid var(--edge);
+    display: grid; place-items: center;
+    font-size: 12px; font-weight: 700; letter-spacing: 0;
+    color: var(--ink);
+  }
+
+  @media (max-width: 560px) {
+    .reward { align-items: flex-start; }
+    .capsule { margin-left: 48px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <span class="pill glass">
+      <span class="dot">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+          <path d="M4 12h16M12 4v16"/>
+        </svg>
+      </span>
+      Now live on Arbitrum Sepolia
+    </span>
+
+    <header>
+      <h1>Capacity Vaults</h1>
+      <p class="sub">
+        Deposit a stablecoin to extend its pool capacity and test a fixed reward in USDZ.
+      </p>
+    </header>
+
+    <section class="vaults">
+      <article class="vault glass">
+        <span class="token" style="background:#2e9e6b">T</span>
+        <span class="name">T-Vault</span>
+        <span class="meta">Tether</span>
+      </article>
+      <article class="vault glass">
+        <span class="token" style="background:#2f6fdd">C</span>
+        <span class="name">C-Vault</span>
+        <span class="meta">Circle</span>
+      </article>
+      <article class="vault glass">
+        <span class="token" style="background:#d98a2b">S</span>
+        <span class="name">S-Vault</span>
+        <span class="meta">Stablecoin</span>
+      </article>
+      <article class="vault glass">
+        <span class="token" style="background:#3c8f77">G</span>
+        <span class="name">G-Vault</span>
+        <span class="meta">Gold-backed</span>
+      </article>
+      <article class="vault glass">
+        <span class="token" style="background:#4b6fd6">P</span>
+        <span class="name">P-Vault</span>
+        <span class="meta">Protocol</span>
+      </article>
+    </section>
+
+    <section class="reward glass">
+      <span class="icon">$</span>
+      <span class="text">Test fixed rewards in USDZ</span>
+      <a class="capsule" href="#capacity">app.stabilizer.finance/capacity</a>
+    </section>
+
+    <footer class="brand">
+      <span class="mark">S</span>
+      <span>Stabilizer</span>
+    </footer>
+
+  </div>
+</body>
+</html>
