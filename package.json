@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "node --test src/lib/ledger.test.ts"
+    "test": "npm --prefix backend test"
   },
   "dependencies": {
     "lucide-react": "^1.63.0",
