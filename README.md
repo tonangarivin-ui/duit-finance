@@ -28,7 +28,7 @@ NODE_ENV=development node scripts/demo.ts
 - Service: `systemctl --user status finance` (port **3300**, `~/.config/systemd/user/finance.service`)
 - Reverse proxy: nginx `/etc/nginx/sites-available/finance` → `127.0.0.1:3300`, basic auth `areif` di `/etc/nginx/.htpasswd-finance`
 - Backup harian 02:00 WIB: `finance-backup.timer` → `/data/backups/finance-YYYY-MM-DD.db` (retensi 30 hari)
-- Domain: **https://duit.darklabs.tech** — A record langsung ke `129.146.2.31` (DNS-only), TLS Let's Encrypt via certbot (`--nginx`), redirect 80→443 otomatis, renew lewat `certbot.timer`
+- Domain: **https://duit.darklabs.tech** — A record langsung ke `<server-ip>` (DNS-only), TLS Let's Encrypt via certbot (`--nginx`), redirect 80→443 otomatis, renew lewat `certbot.timer`
 - **Login aplikasi** (bukan basic auth): form POST `/login` → `/api/login`, cookie `fin_session` HttpOnly+Secure+SameSite=Lax berisi `v1.<exp>.<hmac>` (HMAC-SHA256, stateless — tidak ada tabel sesi). Proteksi semua route di `src/middleware.ts`. "Ingat saya" = 30 hari, tanpa itu = cookie sesi. Rate limit 5 percobaan / 5 menit per IP (in-memory). Logout: tombol di Pengaturan → `POST /api/logout`.
 - Kredensial ada di `.env.production` (chmod 600, git-ignored): `FINANCE_AUTH_USER`, `FINANCE_AUTH_HASH` (`scrypt:<saltHex>:<hashHex>` — **pakai ':'**, systemd EnvironmentFile memakan `$`), `FINANCE_AUTH_SECRET`. Ganti password: lihat komentar di bawah.
 - basic auth nginx masih ada di file tapi dikomentari (lapisan cadangan kalau perlu).

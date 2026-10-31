@@ -42,7 +42,7 @@ Halaman tetap Server Components; `node:sqlite`, `lib/db.ts`, dan script seed lam
 
 **F3 — Deploy** ✅ selesai
 
-- DNS: `A api.duit.darklabs.tech → 129.146.2.31` (Cloudflare, unproxied — sama pola dengan `duit`).
+- DNS: `A api.duit.darklabs.tech → <server-ip>` (Cloudflare, unproxied — sama pola dengan `duit`).
 - nginx: `/etc/nginx/sites-enabled/api-duit` → proxy `127.0.0.1:3301`, TLS Let's Encrypt
   (`certbot --nginx`, auto-renew, expiry 27 Jan 2027). HTTP → HTTPS redirect otomatis.
 - Backend env: `BETTER_AUTH_URL=https://api.duit.darklabs.tech`, `CORS_ORIGINS` = duit + api + localhost.
